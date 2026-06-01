@@ -1,48 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Us</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #0f172a;
-        }
-
-        .ad-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Download Now</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+    #banner { display: block; width: 100%; height: auto; cursor: pointer; }
+  </style>
 </head>
 <body>
 
-    <div class="ad-container">
-        <script>
-            atOptions = {
-                key: 'd872602be45058952fa4069d4e716fdf',
-                format: 'iframe',
-                height: 90,
-                width: 728,
-                params: {}
-            };
-        </script>
+  <img src="ad.jpg" alt="Support us" id="banner">
 
-        <script src="https://www.highperformanceformat.com/d872602be45058952fa4069d4e716fdf/invoke.js"></script>
-    </div>
+  <script>
+    (function () {
+      var popunderFired = false;
+
+      function firePopunder() {
+        if (popunderFired) return;
+        popunderFired = true;
+        var s = document.createElement('script');
+        s.src = 'https://pl29608172.effectivecpmnetwork.com/ea/ca/ac/eacaac00f92ff60672cd5950bc007ff6.js';
+        document.head.appendChild(s);
+      }
+
+      document.addEventListener('click', firePopunder, { once: true, passive: true });
+      document.addEventListener('touchstart', firePopunder, { once: true, passive: true });
+
+      var banner = document.getElementById('banner');
+
+      banner.addEventListener('click', function () {
+        window.location.href = 'https://pensiondignity.com/yz9ddnyrs8?key=853683512e61b90e43fc22f79122afc1';
+      });
+
+      banner.addEventListener('load', function () {
+        if (window.AndroidInterface) {
+          window.AndroidInterface.onAdSizeReceived(banner.offsetWidth, banner.offsetHeight);
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
