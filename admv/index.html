@@ -12,8 +12,7 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden;
       box-sizing: border-box;
     }
 
@@ -32,43 +31,29 @@
       position: relative;
     }
 
-    /* Full-width fixed banner row */
     .ad-container {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
-      min-height: 50px;
-      overflow: visible;
+      height: auto;
+      overflow: hidden;
       position: relative;
       z-index: 2;
     }
 
-    .banner-slot {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .banner-slot iframe {
+    .ad-container iframe {
       display: block;
-      width: 100% !important;
-      max-width: 100% !important;
+      max-width: 100%;
+      width: 100%;
+      height: auto;
       border: none;
     }
 
-    /* Social Bar — floating, separate from banner */
     .social-bar-adaptive {
       position: fixed !important;
       z-index: 2147483646 !important;
       overflow: hidden !important;
-    }
-
-    .social-bar-adaptive iframe,
-    .social-bar-adaptive video {
-      max-width: 100% !important;
-      max-height: 100% !important;
     }
 
     @media (max-width: 480px) {
@@ -77,7 +62,6 @@
         height: 50px !important;
         max-width: 72px !important;
         max-height: 50px !important;
-        border-radius: 4px !important;
       }
     }
 
@@ -86,7 +70,6 @@
         width: 300px !important;
         max-width: min(300px, 40vw) !important;
         max-height: min(220px, 35vh) !important;
-        border-radius: 8px !important;
       }
     }
   </style>
@@ -97,22 +80,17 @@
   <img src="ads.jpg" alt="Fallback Image" class="fallback-image" id="fallbackImage">
 
   <div class="ad-container" id="adContainer">
-    <div class="banner-slot" id="bannerSlot">
-      <!-- BANNER (zapgd=1359786) — full-width strip like "BEWARE OF FAKE WEBSITES" -->
-      <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
-    </div>
+    <!-- Banner (zapgd=1359786) -->
+    <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
   </div>
 
-  <!-- SOCIAL BAR (zapgd=1349937) — small corner notification like "Celebs Who Went..." -->
+  <!-- Social Bar (zapgd=1349937) -->
   <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
 
   <script type="text/javascript">
     const DIRECT_LINK = 'https://ustashewasputtin.com?vV7df=1349889';
     const MOBILE_BREAKPOINT = 480;
-
-    function isMobile() {
-      return window.innerWidth <= MOBILE_BREAKPOINT;
-    }
+    let fallbackHidden = false;
 
     function handleFallbackClick() {
       window.location.href = DIRECT_LINK;
@@ -122,25 +100,78 @@
       .getElementById('fallbackImage')
       .addEventListener('click', handleFallbackClick);
 
-    function isSocialBarNode(node) {
-      if (!node || node.nodeType !== 1) return false;
-      if (node.closest('#adContainer')) return false;
-      if (node.classList && node.classList.contains('social-bar-adaptive')) return true;
+    function isSocialBarElement(el) {
+      if (!el || el.nodeType !== 1) return false;
+      if (el.classList && el.classList.contains('social-bar-adaptive')) return true;
+      if (el.closest && el.closest('.social-bar-adaptive')) return true;
 
-      const style = window.getComputedStyle(node);
-      if (style.position !== 'fixed') return false;
+      const style = window.getComputedStyle(el);
+      if (style.position === 'fixed') {
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 0 && rect.width < 350 && rect.height < 250) {
+          return true;
+        }
+      }
 
-      const rect = node.getBoundingClientRect();
-      return rect.width >= 20 && rect.height >= 20;
+      return false;
+    }
+
+    function getBannerIframe() {
+      const container = document.getElementById('adContainer');
+
+      const inContainer = container.querySelectorAll('iframe');
+      if (inContainer.length > 0) {
+        return inContainer[0];
+      }
+
+      const allIframes = document.querySelectorAll('iframe');
+      for (let i = 0; i < allIframes.length; i++) {
+        const iframe = allIframes[i];
+        if (isSocialBarElement(iframe)) continue;
+
+        const rect = iframe.getBoundingClientRect();
+        if (rect.width >= 200) {
+          return iframe;
+        }
+      }
+
+      return null;
+    }
+
+    function hideFallbackAndNotify() {
+      if (fallbackHidden) return;
+
+      const iframe = getBannerIframe();
+      if (!iframe) return;
+
+      fallbackHidden = true;
+      document.getElementById('fallbackImage').style.display = 'none';
+
+      setTimeout(() => {
+        positionSocialBar();
+
+        if (window.AndroidInterface) {
+          window.AndroidInterface.onAdSizeReceived(
+            iframe.offsetWidth,
+            iframe.offsetHeight
+          );
+        }
+      }, 100);
     }
 
     function markSocialBarNodes() {
       document.body.querySelectorAll('div, iframe').forEach((node) => {
-        if (!isSocialBarNode(node)) return;
+        if (node.closest('#adContainer')) return;
+
+        const style = window.getComputedStyle(node);
+        if (style.position !== 'fixed') return;
+
+        const rect = node.getBoundingClientRect();
+        if (rect.width < 20 || rect.height < 20) return;
 
         if (node.tagName === 'IFRAME') {
           const parent = node.parentElement;
-          if (parent && parent !== document.body && isSocialBarNode(parent)) {
+          if (parent && parent !== document.body) {
             parent.classList.add('social-bar-adaptive');
           } else {
             node.classList.add('social-bar-adaptive');
@@ -154,7 +185,7 @@
     function positionSocialBar() {
       markSocialBarNodes();
 
-      const mobile = isMobile();
+      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
       const bannerEl = document.getElementById('adContainer');
       const bannerRect = bannerEl.getBoundingClientRect();
 
@@ -177,47 +208,26 @@
       });
     }
 
-    const bannerObserver = new MutationObserver(() => {
-      const iframes = document.querySelectorAll('#bannerSlot iframe, #adContainer iframe');
-
-      if (iframes.length === 0) return;
-
-      document.getElementById('fallbackImage').style.display = 'none';
-
-      const iframe = iframes[0];
-
-      setTimeout(() => {
-        positionSocialBar();
-
-        if (window.AndroidInterface) {
-          window.AndroidInterface.onAdSizeReceived(
-            iframe.offsetWidth,
-            iframe.offsetHeight
-          );
-        }
-      }, 150);
-
-      bannerObserver.disconnect();
-    });
-
-    const socialBarObserver = new MutationObserver(() => {
+    const observer = new MutationObserver(() => {
+      hideFallbackAndNotify();
       positionSocialBar();
     });
 
-    bannerObserver.observe(document.getElementById('adContainer'), {
+    observer.observe(document.getElementById('adContainer'), {
       childList: true,
       subtree: true
     });
 
-    socialBarObserver.observe(document.body, {
+    observer.observe(document.body, {
       childList: true,
-      subtree: false
+      subtree: true
     });
 
     window.addEventListener('resize', positionSocialBar);
-    window.addEventListener('orientationchange', () => {
-      setTimeout(positionSocialBar, 200);
-    });
+
+    setTimeout(hideFallbackAndNotify, 500);
+    setTimeout(hideFallbackAndNotify, 1500);
+    setTimeout(hideFallbackAndNotify, 3000);
   </script>
 
 </body>
