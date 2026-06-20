@@ -45,32 +45,8 @@
     .ad-container iframe {
       display: block;
       max-width: 100%;
-      width: 100%;
       height: auto;
       border: none;
-    }
-
-    .social-bar-adaptive {
-      position: fixed !important;
-      z-index: 2147483646 !important;
-      overflow: hidden !important;
-    }
-
-    @media (max-width: 480px) {
-      .social-bar-adaptive {
-        width: 72px !important;
-        height: 50px !important;
-        max-width: 72px !important;
-        max-height: 50px !important;
-      }
-    }
-
-    @media (min-width: 481px) {
-      .social-bar-adaptive {
-        width: 300px !important;
-        max-width: min(300px, 40vw) !important;
-        max-height: min(220px, 35vh) !important;
-      }
     }
   </style>
 </head>
@@ -80,154 +56,53 @@
   <img src="ads.jpg" alt="Fallback Image" class="fallback-image" id="fallbackImage">
 
   <div class="ad-container" id="adContainer">
-    <!-- Banner (zapgd=1359786) -->
+
+    <!-- Social Bar first (same order as sportzxads.pages.dev) -->
+    <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
+
+    <!-- Banner -->
     <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
+
   </div>
 
-  <!-- Social Bar (zapgd=1349937) -->
-  <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
-
   <script type="text/javascript">
-    const DIRECT_LINK = 'https://ustashewasputtin.com?vV7df=1349889';
-    const MOBILE_BREAKPOINT = 480;
-    let fallbackHidden = false;
-
     function handleFallbackClick() {
-      window.location.href = DIRECT_LINK;
+      window.location.href = 'https://ustashewasputtin.com?vV7df=1349889';
     }
 
     document
       .getElementById('fallbackImage')
       .addEventListener('click', handleFallbackClick);
 
-    function isSocialBarElement(el) {
-      if (!el || el.nodeType !== 1) return false;
-      if (el.classList && el.classList.contains('social-bar-adaptive')) return true;
-      if (el.closest && el.closest('.social-bar-adaptive')) return true;
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          const iframes = document.querySelectorAll('.ad-container iframe');
 
-      const style = window.getComputedStyle(el);
-      if (style.position === 'fixed') {
-        const rect = el.getBoundingClientRect();
-        if (rect.width > 0 && rect.width < 350 && rect.height < 250) {
-          return true;
-        }
-      }
+          if (iframes.length > 0) {
+            document.getElementById('fallbackImage').style.display = 'none';
 
-      return false;
-    }
+            const iframe = iframes[0];
 
-    function getBannerIframe() {
-      const container = document.getElementById('adContainer');
+            setTimeout(() => {
+              if (window.AndroidInterface) {
+                window.AndroidInterface.onAdSizeReceived(
+                  iframe.offsetWidth,
+                  iframe.offsetHeight
+                );
+              }
+            }, 100);
 
-      const inContainer = container.querySelectorAll('iframe');
-      if (inContainer.length > 0) {
-        return inContainer[0];
-      }
-
-      const allIframes = document.querySelectorAll('iframe');
-      for (let i = 0; i < allIframes.length; i++) {
-        const iframe = allIframes[i];
-        if (isSocialBarElement(iframe)) continue;
-
-        const rect = iframe.getBoundingClientRect();
-        if (rect.width >= 200) {
-          return iframe;
-        }
-      }
-
-      return null;
-    }
-
-    function hideFallbackAndNotify() {
-      if (fallbackHidden) return;
-
-      const iframe = getBannerIframe();
-      if (!iframe) return;
-
-      fallbackHidden = true;
-      document.getElementById('fallbackImage').style.display = 'none';
-
-      setTimeout(() => {
-        positionSocialBar();
-
-        if (window.AndroidInterface) {
-          window.AndroidInterface.onAdSizeReceived(
-            iframe.offsetWidth,
-            iframe.offsetHeight
-          );
-        }
-      }, 100);
-    }
-
-    function markSocialBarNodes() {
-      document.body.querySelectorAll('div, iframe').forEach((node) => {
-        if (node.closest('#adContainer')) return;
-
-        const style = window.getComputedStyle(node);
-        if (style.position !== 'fixed') return;
-
-        const rect = node.getBoundingClientRect();
-        if (rect.width < 20 || rect.height < 20) return;
-
-        if (node.tagName === 'IFRAME') {
-          const parent = node.parentElement;
-          if (parent && parent !== document.body) {
-            parent.classList.add('social-bar-adaptive');
-          } else {
-            node.classList.add('social-bar-adaptive');
+            observer.disconnect();
           }
-        } else {
-          node.classList.add('social-bar-adaptive');
         }
-      });
-    }
-
-    function positionSocialBar() {
-      markSocialBarNodes();
-
-      const mobile = window.innerWidth <= MOBILE_BREAKPOINT;
-      const bannerEl = document.getElementById('adContainer');
-      const bannerRect = bannerEl.getBoundingClientRect();
-
-      document.querySelectorAll('.social-bar-adaptive').forEach((el) => {
-        if (mobile) {
-          const top = bannerRect.height > 0
-            ? bannerRect.top + window.scrollY
-            : bannerEl.offsetTop;
-
-          el.style.setProperty('top', top + 'px', 'important');
-          el.style.setProperty('right', '0', 'important');
-          el.style.setProperty('bottom', 'auto', 'important');
-          el.style.setProperty('left', 'auto', 'important');
-        } else {
-          el.style.setProperty('bottom', '12px', 'important');
-          el.style.setProperty('right', '12px', 'important');
-          el.style.setProperty('top', 'auto', 'important');
-          el.style.setProperty('left', 'auto', 'important');
-        }
-      });
-    }
-
-    const observer = new MutationObserver(() => {
-      hideFallbackAndNotify();
-      positionSocialBar();
+      }
     });
 
-    observer.observe(document.getElementById('adContainer'), {
+    observer.observe(document.querySelector('.ad-container'), {
       childList: true,
       subtree: true
     });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    window.addEventListener('resize', positionSocialBar);
-
-    setTimeout(hideFallbackAndNotify, 500);
-    setTimeout(hideFallbackAndNotify, 1500);
-    setTimeout(hideFallbackAndNotify, 3000);
   </script>
 
 </body>
