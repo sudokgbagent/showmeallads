@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Download Now</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: inherit;
+    }
+
+    .fallback-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+      z-index: 1;
+      position: relative;
+    }
+
+    .ad-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      min-height: 50px;
+      overflow: visible;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ad-container iframe {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      border: none;
+    }
+
+    body > div[style*="fixed"],
+    body > iframe[style*="fixed"] {
+      z-index: 2147483646 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="ads.jpg" alt="Fallback Image" class="fallback-image" id="fallbackImage">
+
+  <div class="ad-container" id="adContainer">
+    <!-- Banner -->
+    <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
+  </div>
+
+  <!-- Social Bar -->
+  <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
+
+  <script type="text/javascript">
+    const DIRECT_LINK = 'https://ustashewasputtin.com?vV7df=1349889';
+
+    function handleFallbackClick() {
+      window.location.href = DIRECT_LINK;
+    }
+
+    document
+      .getElementById('fallbackImage')
+      .addEventListener('click', handleFallbackClick);
+
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          const iframes = document.querySelectorAll('.ad-container iframe');
+
+          if (iframes.length > 0) {
+            document.getElementById('fallbackImage').style.display = 'none';
+
+            const iframe = iframes[0];
+
+            setTimeout(() => {
+              if (window.AndroidInterface) {
+                window.AndroidInterface.onAdSizeReceived(
+                  iframe.offsetWidth,
+                  iframe.offsetHeight
+                );
+              }
+            }, 100);
+
+            observer.disconnect();
+          }
+        }
+      }
+    });
+
+    observer.observe(document.querySelector('.ad-container'), {
+      childList: true,
+      subtree: true
+    });
+  </script>
+
+</body>
+
+</html>
