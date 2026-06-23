@@ -12,8 +12,7 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden;
       box-sizing: border-box;
     }
 
@@ -32,14 +31,13 @@
       position: relative;
     }
 
-    /* Banner only — full width strip */
     .ad-container {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: auto;
-      overflow: visible;
+      overflow: hidden;
       position: relative;
       z-index: 2;
     }
@@ -47,15 +45,8 @@
     .ad-container iframe {
       display: block;
       max-width: 100%;
-      width: 100%;
       height: auto;
       border: none;
-    }
-
-    /* Social Bar floats above everything — does not hide banner */
-    body > div[style*="fixed"],
-    body > iframe[style*="fixed"] {
-      z-index: 2147483646 !important;
     }
   </style>
 </head>
@@ -64,17 +55,20 @@
 
   <img src="ads.jpg" alt="Fallback Image" class="fallback-image" id="fallbackImage">
 
-  <!-- BANNER only in this container -->
   <div class="ad-container" id="adContainer">
-    <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
+
+    <!-- Banner -->
+    <script data-cfasync="false" src="//d318g7p3azvr44.cloudfront.net/?zapgd=1359786"></script>
+
   </div>
 
-  <!-- SOCIAL BAR separate — shows at same time as banner -->
-  <script data-cfasync="false" src="https://d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
+  <!-- Social Bar -->
+  <script data-cfasync="false" src="//d318g7p3azvr44.cloudfront.net/?zapgd=1349937"></script>
 
   <script type="text/javascript">
     function handleFallbackClick() {
-      window.location.href = 'https://ustashewasputtin.com?vV7df=1349889';
+      window.location.href =
+        'https://ustashewasputtin.com?vV7df=1349889';
     }
 
     document
@@ -84,10 +78,9 @@
     const observer = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
         if (mutation.type === 'childList') {
-          const iframes = document.querySelectorAll('#adContainer iframe');
+          const iframes = document.querySelectorAll('.ad-container iframe');
 
           if (iframes.length > 0) {
-            /* Only hide fallback image — banner + social bar stay visible together */
             document.getElementById('fallbackImage').style.display = 'none';
 
             const iframe = iframes[0];
@@ -107,7 +100,7 @@
       }
     });
 
-    observer.observe(document.getElementById('adContainer'), {
+    observer.observe(document.querySelector('.ad-container'), {
       childList: true,
       subtree: true
     });
