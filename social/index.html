@@ -12,7 +12,7 @@
 html, body {
   width: 100%; height: 100%;
   overflow: hidden;
-  background: #0d1a24;
+  background: #081018;
   font-family: 'Inter', sans-serif;
 }
 
@@ -20,147 +20,151 @@ html, body {
   container-type: size;
   container-name: banner;
   position: relative;
-  display: flex;
-  align-items: stretch;
   width: 100%; height: 100%;
   overflow: hidden;
-  background: linear-gradient(115deg, #0b1620 0%, #16283570 40%, #1c3140 100%);
+  background: linear-gradient(160deg, #0a1620 0%, #10222f 55%, #142a37 100%);
 }
 
-/* ---- ambient rain (quiet, not decorative-loud) ---- */
-.rain {
-  position: absolute; inset: 0;
-  pointer-events: none;
-  opacity: .28;
-  overflow: hidden;
-}
+/* ---------------- ambient rain ---------------- */
+.rain { position: absolute; inset: 0; pointer-events: none; opacity: .22; z-index: 1; }
 .rain span {
-  position: absolute;
-  top: -20%;
-  width: 1px;
-  height: 18%;
-  background: linear-gradient(to bottom, transparent, rgba(148,180,199,.55), transparent);
+  position: absolute; top: -20%; width: 1px; height: 16%;
+  background: linear-gradient(to bottom, transparent, rgba(148,180,199,.6), transparent);
   animation: fall linear infinite;
 }
-@keyframes fall {
-  to { transform: translateY(145%); }
+@keyframes fall { to { transform: translateY(150%); } }
+
+/* ---------------- rising flood waves (signature element) ---------------- */
+.flood {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 58%;
+  z-index: 2;
+  overflow: hidden;
+}
+.flood svg { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
+.wave-back  { animation: drift 13s linear infinite; opacity: .55; }
+.wave-mid   { animation: drift 9s linear infinite reverse; opacity: .75; }
+.wave-front { animation: drift 6.5s linear infinite; opacity: .95; }
+@keyframes drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-/* ---- candle panel ---- */
-.candle-panel {
-  flex: 0 0 auto;
+/* subtle rising tide breathing, whole flood block */
+.flood-rise { animation: rise 7s ease-in-out infinite; transform-origin: bottom; }
+@keyframes rise {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3%); }
+}
+
+/* ---------------- stage: fixed candle column + content, always in sync ---------------- */
+.stage {
   position: relative;
-  width: clamp(46px, 14cqw, 90px);
+  z-index: 4;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* candle column: reliable fixed-width flex panel, so the candle is always
+   vertically centered and never drifts relative to the text or waves */
+.candle-col {
+  flex: 0 0 auto;
+  width: clamp(56px, 16cqw, 104px);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,.22);
-  border-right: 1px solid rgba(224,164,88,.14);
+}
+.candle-wrap {
+  position: relative;
+  animation: bob 4.2s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8%); }
 }
 .candle {
-  width: 44%;
-  max-width: 34px;
-  filter: drop-shadow(0 0 6px rgba(224,164,88,.45));
+  width: clamp(30px, 10cqh, 66px);
+  display: block;
+  filter: drop-shadow(0 0 8px rgba(224,164,88,.55));
 }
-.flame {
-  animation: flicker 2.6s ease-in-out infinite;
-  transform-origin: 50% 100%;
+.glow {
+  position: absolute; left: 50%; top: 50%;
+  width: 220%; height: 220%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(224,164,88,.24) 0%, transparent 68%);
+  z-index: -1;
+  animation: glowPulse 3.2s ease-in-out infinite;
 }
-@keyframes flicker {
-  0%, 100% { transform: scaleY(1) scaleX(1) rotate(0deg); opacity: 1; }
-  20%      { transform: scaleY(1.06) scaleX(.96) rotate(-1.5deg); opacity: .93; }
-  45%      { transform: scaleY(.94) scaleX(1.04) rotate(1.2deg); opacity: 1; }
-  70%      { transform: scaleY(1.03) scaleX(.98) rotate(-.8deg); opacity: .96; }
+@keyframes glowPulse {
+  0%, 100% { opacity: .75; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
 }
 
-/* ---- content ---- */
+/* ---------------- content ---------------- */
 .content {
   flex: 1;
   min-width: 0;
-  display: flex;
-  align-items: center;
-  padding: 0 clamp(10px, 3cqw, 26px);
-  position: relative;
-  z-index: 2;
+  display: flex; align-items: center;
+  padding: 0 clamp(12px, 3cqw, 28px);
 }
 .panel {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   gap: clamp(8px, 2.5cqw, 22px);
 }
 .primary {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(2px, .6cqh, 6px);
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(2px, .55cqh, 5px);
 }
 
 .eyebrow {
-  font-size: clamp(5px, min(1.15cqh, 1.5cqw), 11px);
-  font-weight: 600;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: rgba(224,164,88,.85);
+  font-size: clamp(5px, min(1.1cqh, 1.4cqw), 11px);
+  font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(224,164,88,.9);
 }
-
 .headline {
   font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(13px, min(6cqh, 8cqw), 46px);
-  line-height: 1.05;
+  font-style: italic; font-weight: 500;
+  font-size: clamp(14px, min(6.2cqh, 8.4cqw), 48px);
+  line-height: 1.03;
   letter-spacing: .01em;
-  color: #f1ece0;
+  color: #f5f0e4;
+  text-shadow: 0 2px 14px rgba(0,0,0,.5);
   white-space: nowrap;
 }
-
 .subtext {
-  font-size: clamp(5px, min(1.35cqh, 1.75cqw), 13px);
-  font-weight: 400;
-  color: rgba(241,236,224,.72);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: .01em;
+  font-size: clamp(5px, min(1.3cqh, 1.7cqw), 13px);
+  color: rgba(245,240,228,.78);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-
 .meta {
-  font-size: clamp(5px, min(1.2cqh, 1.55cqw), 11px);
-  font-weight: 500;
-  letter-spacing: .04em;
-  color: rgba(148,180,199,.75);
-  text-transform: uppercase;
+  font-size: clamp(5px, min(1.15cqh, 1.5cqw), 11px);
+  font-weight: 500; letter-spacing: .05em; text-transform: uppercase;
+  color: rgba(148,190,209,.8);
   white-space: nowrap;
 }
 
-/* right-side quiet stat */
 .stat {
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding-left: clamp(6px, 1.4cqw, 14px);
-  border-left: 1px solid rgba(148,180,199,.18);
-  text-align: center;
-  line-height: 1.1;
+  border-left: 1px solid rgba(148,180,199,.22);
+  text-align: center; line-height: 1.1;
 }
 .stat-num {
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  font-size: clamp(11px, min(3.6cqh, 4.4cqw), 30px);
+  font-family: 'Fraunces', serif; font-weight: 600;
+  font-size: clamp(11px, min(3.8cqh, 4.6cqw), 32px);
   color: #e0a458;
+  text-shadow: 0 0 12px rgba(224,164,88,.35);
 }
 .stat-lbl {
   font-size: clamp(4px, min(1cqh, 1.2cqw), 9px);
-  font-weight: 500;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  color: rgba(241,236,224,.5);
+  font-weight: 500; letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(245,240,228,.55);
   margin-top: 2px;
 }
 
@@ -169,8 +173,8 @@ html, body {
   .stat-lbl { display: none; }
 }
 @container banner (max-height: 65px) {
-  .candle-panel { width: 38px; }
   .subtext { display: none; }
+  .candle-col { width: 38px; }
 }
 @container banner (max-width: 380px) {
   .stat { display: none; }
@@ -181,56 +185,57 @@ html, body {
 <body>
 
 <div class="banner" id="banner">
+
   <div class="rain" id="rain"></div>
 
-  <div class="candle-panel">
-    <svg class="candle" viewBox="0 0 40 70" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="20" cy="66" rx="10" ry="3" fill="#e0a458" opacity=".18"/>
-      <rect x="14" y="28" width="12" height="36" rx="2" fill="#efe3cf"/>
-      <rect x="14" y="28" width="12" height="36" rx="2" fill="url(#waxShade)"/>
-      <line x1="20" y1="24" x2="20" y2="29" stroke="#5b4a36" stroke-width="1.4"/>
-      <g class="flame">
-        <path d="M20 4 C26 12 24 18 20 22 C16 18 14 12 20 4Z" fill="#e0a458"/>
-        <path d="M20 10 C23 15 22 19 20 21 C18 19 17 15 20 10Z" fill="#f6d9a0"/>
-      </g>
-      <defs>
-        <linearGradient id="waxShade" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#000" stop-opacity=".18"/>
-          <stop offset=".5" stop-color="#000" stop-opacity="0"/>
-          <stop offset="1" stop-color="#000" stop-opacity=".18"/>
-        </linearGradient>
-      </defs>
+  <div class="flood flood-rise">
+    <svg class="wave-back" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 C200,180 400,60 600,110 C800,160 1000,50 1200,100 C1350,135 1500,90 1600,110 L1600,300 L0,300 Z" fill="#1c3a4a" opacity=".7"/>
+      <path d="M800,120 C1000,180 1200,60 1400,110 C1550,145 1700,90 1800,110 L1800,300 L800,300 Z" fill="#1c3a4a" opacity=".7"/>
+    </svg>
+    <svg class="wave-mid" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,150 C220,90 420,190 640,140 C860,90 1060,190 1280,140 C1420,110 1520,150 1600,140 L1600,300 L0,300 Z" fill="#254a5c" opacity=".8"/>
+      <path d="M800,150 C1020,90 1220,190 1440,140 C1660,90 1860,190 2080,140 L2080,300 L800,300 Z" fill="#254a5c" opacity=".8"/>
+    </svg>
+    <svg class="wave-front" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,190 C180,150 380,220 580,180 C780,140 980,220 1180,180 C1350,150 1480,190 1600,180 L1600,300 L0,300 Z" fill="#2e5568" opacity=".92"/>
+      <path d="M800,190 C980,150 1180,220 1380,180 C1580,140 1780,220 1980,180 L1980,300 L800,300 Z" fill="#2e5568" opacity=".92"/>
     </svg>
   </div>
 
-  <div class="content">
-    <div class="panel">
-      <div class="primary">
-        <span class="eyebrow">Bangladesh · Monsoon Crisis</span>
-        <div class="headline">Pray for Chittagong</div>
-        <p class="subtext">Record rainfall, floods &amp; landslides have devastated the region</p>
-        <p class="meta" id="metaLine">Chittagong &amp; the Hill Tracts · July 2026</p>
+  <div class="stage">
+    <div class="candle-col">
+      <div class="candle-wrap">
+        <div class="glow"></div>
+        <img class="candle" src="https://i.ibb.co.com/Kptxyh9c/c-ss1-removebg-preview.png" alt="Map of Chittagong">
       </div>
-      <div class="stat">
-        <span class="stat-num">30+</span>
-        <span class="stat-lbl">Lives Lost</span>
+    </div>
+
+    <div class="content">
+      <div class="panel">
+        <div class="primary">
+          <span class="eyebrow">Bangladesh · Monsoon Crisis</span>
+          <div class="headline">Pray for Chittagong</div>
+          <p class="subtext">Record rainfall, floods &amp; landslides have devastated the region</p>
+          <p class="meta">Chittagong &amp; the Hill Tracts · July 2026</p>
+        </div>
+        <div class="stat">
+          <span class="stat-num">30+</span>
+          <span class="stat-lbl">Lives Lost</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Generate a handful of quiet, irregular rain streaks
 const rain = document.getElementById('rain');
-const COUNT = 26;
+const COUNT = 24;
 for (let i = 0; i < COUNT; i++) {
   const s = document.createElement('span');
-  const left = Math.random() * 100;
-  const dur = 1.1 + Math.random() * 1.4;
-  const delay = Math.random() * 2.5;
-  s.style.left = left + '%';
-  s.style.animationDuration = dur + 's';
-  s.style.animationDelay = delay + 's';
+  s.style.left = (Math.random() * 100) + '%';
+  s.style.animationDuration = (1.1 + Math.random() * 1.3) + 's';
+  s.style.animationDelay = (Math.random() * 2.5) + 's';
   rain.appendChild(s);
 }
 </script>
