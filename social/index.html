@@ -39,6 +39,7 @@ html, body {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   height: 58%;
+  min-height: 22px;
   z-index: 2;
   overflow: hidden;
 }
@@ -92,15 +93,15 @@ html, body {
 }
 .glow {
   position: absolute; left: 50%; top: 50%;
-  width: 220%; height: 220%;
+  width: 155%; height: 155%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(224,164,88,.24) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(224,164,88,.38) 0%, rgba(224,164,88,.14) 45%, transparent 72%);
   z-index: -1;
   animation: glowPulse 3.2s ease-in-out infinite;
 }
 @keyframes glowPulse {
-  0%, 100% { opacity: .75; transform: translate(-50%, -50%) scale(1); }
-  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+  0%, 100% { opacity: .8; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;  transform: translate(-50%, -50%) scale(1.05); }
 }
 
 /* ---------------- content ---------------- */
@@ -190,16 +191,18 @@ html, body {
 
   <div class="flood flood-rise">
     <svg class="wave-back" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,120 C200,180 400,60 600,110 C800,160 1000,50 1200,100 C1350,135 1500,90 1600,110 L1600,300 L0,300 Z" fill="#1c3a4a" opacity=".7"/>
-      <path d="M800,120 C1000,180 1200,60 1400,110 C1550,145 1700,90 1800,110 L1800,300 L800,300 Z" fill="#1c3a4a" opacity=".7"/>
+      <path d="M0,120 C200,180 400,60 600,110 C800,160 1000,50 1200,100 C1350,135 1500,90 1600,110 L1600,300 L0,300 Z" fill="#2b5b73" opacity=".65"/>
+      <path d="M800,120 C1000,180 1200,60 1400,110 C1550,145 1700,90 1800,110 L1800,300 L800,300 Z" fill="#2b5b73" opacity=".65"/>
     </svg>
     <svg class="wave-mid" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,150 C220,90 420,190 640,140 C860,90 1060,190 1280,140 C1420,110 1520,150 1600,140 L1600,300 L0,300 Z" fill="#254a5c" opacity=".8"/>
-      <path d="M800,150 C1020,90 1220,190 1440,140 C1660,90 1860,190 2080,140 L2080,300 L800,300 Z" fill="#254a5c" opacity=".8"/>
+      <path d="M0,150 C220,90 420,190 640,140 C860,90 1060,190 1280,140 C1420,110 1520,150 1600,140 L1600,300 L0,300 Z" fill="#377390" opacity=".78"/>
+      <path d="M800,150 C1020,90 1220,190 1440,140 C1660,90 1860,190 2080,140 L2080,300 L800,300 Z" fill="#377390" opacity=".78"/>
     </svg>
     <svg class="wave-front" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,190 C180,150 380,220 580,180 C780,140 980,220 1180,180 C1350,150 1480,190 1600,180 L1600,300 L0,300 Z" fill="#2e5568" opacity=".92"/>
-      <path d="M800,190 C980,150 1180,220 1380,180 C1580,140 1780,220 1980,180 L1980,300 L800,300 Z" fill="#2e5568" opacity=".92"/>
+      <path d="M0,190 C180,150 380,220 580,180 C780,140 980,220 1180,180 C1350,150 1480,190 1600,180 L1600,300 L0,300 Z" fill="#4390ac" opacity=".95"/>
+      <path d="M800,190 C980,150 1180,220 1380,180 C1580,140 1780,220 1980,180 L1980,300 L800,300 Z" fill="#4390ac" opacity=".95"/>
+      <path d="M0,190 C180,150 380,220 580,180 C780,140 980,220 1180,180 C1350,150 1480,190 1600,180" fill="none" stroke="rgba(198,228,238,.55)" stroke-width="2.5"/>
+      <path d="M800,190 C980,150 1180,220 1380,180 C1580,140 1780,220 1980,180" fill="none" stroke="rgba(198,228,238,.55)" stroke-width="2.5"/>
     </svg>
   </div>
 
