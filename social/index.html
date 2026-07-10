@@ -38,10 +38,12 @@ html, body {
 .flood {
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  height: 58%;
-  min-height: 22px;
+  height: 30%;
+  min-height: 14px;
   z-index: 2;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
 }
 .flood svg { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; }
 .wave-back  { animation: drift 13s linear infinite; opacity: .55; }
@@ -56,7 +58,7 @@ html, body {
 .flood-rise { animation: rise 7s ease-in-out infinite; transform-origin: bottom; }
 @keyframes rise {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-3%); }
+  50%      { transform: translateY(-6%); }
 }
 
 /* ---------------- stage: fixed candle column + content, always in sync ---------------- */
@@ -123,30 +125,32 @@ html, body {
 }
 
 .eyebrow {
-  font-size: clamp(5px, min(1.1cqh, 1.4cqw), 11px);
-  font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  font-size: clamp(4px, min(1cqh, 1.3cqw), 11px);
+  font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   color: rgba(224,164,88,.9);
 }
 .headline {
   font-family: 'Fraunces', serif;
   font-style: italic; font-weight: 500;
-  font-size: clamp(14px, min(6.2cqh, 8.4cqw), 48px);
-  line-height: 1.03;
+  font-size: clamp(13px, min(5.4cqh, 7.6cqw), 48px);
+  line-height: 1.02;
   letter-spacing: .01em;
   color: #f5f0e4;
   text-shadow: 0 2px 14px rgba(0,0,0,.5);
   white-space: nowrap;
 }
 .subtext {
-  font-size: clamp(5px, min(1.3cqh, 1.7cqw), 13px);
+  font-size: clamp(4px, min(1.05cqh, 1.4cqw), 13px);
   color: rgba(245,240,228,.78);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .meta {
-  font-size: clamp(5px, min(1.15cqh, 1.5cqw), 11px);
+  font-size: clamp(4px, min(.95cqh, 1.25cqw), 11px);
   font-weight: 500; letter-spacing: .05em; text-transform: uppercase;
   color: rgba(148,190,209,.8);
   white-space: nowrap;
+  line-height: 1.2;
 }
 
 .stat {
@@ -172,14 +176,14 @@ html, body {
 @container banner (max-height: 100px) {
   .eyebrow { display: none; }
   .stat-lbl { display: none; }
+  .primary { gap: 0; }
 }
 @container banner (max-height: 65px) {
-  .subtext { display: none; }
+  .primary { gap: 0; }
   .candle-col { width: 38px; }
 }
 @container banner (max-width: 380px) {
   .stat { display: none; }
-  .subtext { display: none; }
 }
 </style>
 </head>
